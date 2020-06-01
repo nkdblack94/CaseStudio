@@ -122,7 +122,7 @@
                 let n = Math.floor(Math.random() * 455);
                 image.setStyle(setStyleCar(number, n));
                 arr.push({...image});
-                if (number === 6) {
+                if (number === 7) {
                     number = 0;
                 }
             }
@@ -141,7 +141,7 @@
 
     let Car = function (x, y, width, height) {
         this.image = new Image();
-        this.image.src = './image/car6.png';
+        this.image.src = './image/car06.png';
         this.x = x;
         this.y = y;
         this.width = width;
@@ -187,6 +187,8 @@
     IMG_CAR5.src = './image/car5.png';
     const IMG_CAR6 = new Image();
     IMG_CAR6.src = './image/car7.png';
+    const IMG_CAR7 = new Image();
+    IMG_CAR7.src = './image/car07.png';
 
     function setStyleCar(number, x) {
         switch (number) {
@@ -202,7 +204,7 @@
             case 1:
                 return {
                     x: x,
-                    y: -150,
+                    y: -100,
                     width: 45,
                     height: 100,
                     image: IMG_CAR1,
@@ -211,7 +213,7 @@
             case 2:
                 return {
                     x: x,
-                    y: -250,
+                    y: -150,
                     width: 45,
                     height: 100,
                     image: IMG_CAR2,
@@ -220,7 +222,7 @@
             case 3:
                 return {
                     x: x,
-                    y: -350,
+                    y: -200,
                     width: 45,
                     height: 100,
                     image: IMG_CAR3,
@@ -229,7 +231,7 @@
             case 4:
                 return {
                     x: x,
-                    y: -450,
+                    y: -250,
                     width: 45,
                     height: 100,
                     image: IMG_CAR4,
@@ -238,7 +240,7 @@
             case 5:
                 return {
                     x: x,
-                    y: -550,
+                    y: -300,
                     width: 45,
                     height: 100,
                     image: IMG_CAR5,
@@ -247,10 +249,19 @@
             case 6:
                 return {
                     x: x,
-                    y: -550,
-                    width: 45,
+                    y: -350,
+                    width: 50,
                     height: 80,
                     image: IMG_CAR6,
+                    status: 'down'
+                };
+            case 7:
+                return {
+                    x: x,
+                    y: -400,
+                    width: 45,
+                    height: 100,
+                    image: IMG_CAR7,
                     status: 'down'
                 };
         }
@@ -282,7 +293,7 @@
     IMG_COI.setStyle(setStyleCoin(50));
     ARRCOIN.push({...IMG_COI, x: 50, y: -100}, {...IMG_COI, x: 250, y: -350}, {...IMG_COI, x: 460, y: -550});
 
-    const IMG_CAR = new Car(225, 520, 45, 100);
+    const IMG_CAR = new Car(225, 520, 50, 90);
 
     let canvas = document.getElementById('myCanvas');
     let ctx = canvas.getContext('2d');
@@ -295,7 +306,7 @@
         CAR.loadImgBgCar(ARRCAR, CAR);
         IMG_CAR.loadImgCar();
 
-        speed += 0.0001;
+        speed += 0.0005;
         let timer = setTimeout(LoadImage, 10);
         CAR.collision(ARRCAR, IMG_CAR, timer);
         IMG_COI.collision(ARRCOIN, IMG_CAR)
