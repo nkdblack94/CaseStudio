@@ -80,6 +80,7 @@
                     arr[i].y < image.y + image.height &&
                     arr[i].y + arr[i].height > image.y) {
                     arr.splice(i, 1);
+                    point += 3;
                 }
             }
         }
@@ -96,6 +97,11 @@
             this.y += y
         };
 
+        this.reset = function (x, y) {
+            this.x = x;
+            this.y = y
+        }
+
         this.setStyle = function (style) {
             this.image = style.image;
             this.x = style.x;
@@ -110,6 +116,7 @@
             for (let i = 0; i < length; i++) {
                 if (arr[i].y >= 630) {
                     arr.splice(i, 1);
+                    point++;
                     length--;
                 }
                 if (arr[i].status === 'down') {
@@ -134,6 +141,10 @@
                     arr[i].y < image.y + image.height &&
                     arr[i].y + arr[i].height > image.y) {
                     clearTimeout(timer);
+                    image.reset(255, 520);
+                    arr[i].reset(this.x, this.y);
+                    StartGame(250);
+                    ctx.fillText("Game Over", 130, 220);
                 }
             }
         }
@@ -147,6 +158,11 @@
         this.width = width;
         this.height = height;
         this.status = 'left';
+
+        this.reset = function (x, y) {
+            this.x = x;
+            this.y = y
+        };
 
         this.turnLeft = function (x) {
             this.x -= x;
@@ -169,6 +185,9 @@
 
     const BACKGROUND = new BackgroundRoad(0, 0, 500, 630);
     BACKGROUND.image.src = './image/road3.jpg';
+
+    let imgBackgroud = new Image();
+    imgBackgroud.src = './image/backgroud.jpg';
 
     let arrBackground = [];
     arrBackground.push({...BACKGROUND, y: 0}, {...BACKGROUND, y: -630});
@@ -269,6 +288,7 @@
 
     let number = 0;
     let speed = 1;
+    let point = 0;
     const CAR = new BackgroundCar(50, -150, 45, 100, 'down');
     const ARRCAR = [];
     CAR.setStyle(setStyleCar(number));
@@ -306,11 +326,20 @@
         CAR.loadImgBgCar(ARRCAR, CAR);
         IMG_CAR.loadImgCar();
 
+        let gradient = ctx.createLinearGradient(0, 0, 50, 0);
+        gradient.addColorStop("0", "magenta");
+        gradient.addColorStop("0.5", "blue");
+        gradient.addColorStop("1.0", "red");
+        ctx.fillStyle = gradient;
+        ctx.font = "30px Arial";
+        ctx.fillText("Point: " + point, 10, 50);
+
         speed += 0.0005;
         let timer = setTimeout(LoadImage, 10);
         CAR.collision(ARRCAR, IMG_CAR, timer);
         IMG_COI.collision(ARRCOIN, IMG_CAR)
     };
+
 
     document.addEventListener('keydown', function (evt) {
         if (evt.keyCode === 37) {
@@ -321,7 +350,37 @@
         }
     });
 
-    LoadImage();
+   StartGame(250);
+
+    function StartGame(y) {
+        const rect = {x: 190, y: y, width: 130, height: 60};
+        let onStart = (evt) => {
+            if (evt.layerX > rect.x && evt.layerX < rect.x + rect.width && evt.layerY < rect.y + rect.height && evt.layerY > rect.y) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let audioE = document.createElement("audio");
+                audioE.setAttribute("src", "./image/audio.mp3");
+                audioE.load();
+                audioE.play();
+                point = 0;
+                LoadImage();
+                canvas.removeEventListener("click", onStart)
+            }
+        };
+
+        canvas.addEventListener('click', onStart);
+        ctx.drawImage(imgBackgroud, 0, 0, 500, 630);
+        ctx.beginPath();
+        ctx.rect(rect.x, rect.y, rect.width, rect.height);
+        ctx.fillStyle = 'rgba(225,225,225,0.5)';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'red';
+        ctx.stroke();
+        ctx.closePath();
+        ctx.font = '40pt Kremlin Pro Web';
+        ctx.fillStyle = 'red';
+        ctx.fillText('Start', 200, 300);
+    }
 </script>
 </body>
 </html>
