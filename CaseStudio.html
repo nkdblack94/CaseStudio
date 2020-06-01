@@ -80,7 +80,7 @@
                     arr[i].y < image.y + image.height &&
                     arr[i].y + arr[i].height > image.y) {
                     arr.splice(i, 1);
-                    point += 3;
+                    point += 2;
                 }
             }
         }
@@ -334,12 +334,11 @@
         ctx.font = "30px Arial";
         ctx.fillText("Point: " + point, 10, 50);
 
-        speed += 0.0005;
+        speed += 0.0002;
         let timer = setTimeout(LoadImage, 10);
         CAR.collision(ARRCAR, IMG_CAR, timer);
         IMG_COI.collision(ARRCOIN, IMG_CAR)
     };
-
 
     document.addEventListener('keydown', function (evt) {
         if (evt.keyCode === 37) {
@@ -350,17 +349,15 @@
         }
     });
 
-   StartGame(250);
+    StartAudio(250);
+    StartGame(250);
 
     function StartGame(y) {
         const rect = {x: 190, y: y, width: 130, height: 60};
         let onStart = (evt) => {
             if (evt.layerX > rect.x && evt.layerX < rect.x + rect.width && evt.layerY < rect.y + rect.height && evt.layerY > rect.y) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                let audioE = document.createElement("audio");
-                audioE.setAttribute("src", "./image/audio.mp3");
-                audioE.load();
-                audioE.play();
+                speed = 0;
                 point = 0;
                 LoadImage();
                 canvas.removeEventListener("click", onStart)
@@ -381,6 +378,25 @@
         ctx.fillStyle = 'red';
         ctx.fillText('Start', 200, 300);
     }
+
+    function StartAudio(y) {
+        const rect = {x: 190, y: y, width: 130, height: 60};
+        let onStart = (evt) => {
+            if (evt.layerX > rect.x && evt.layerX < rect.x + rect.width && evt.layerY < rect.y + rect.height && evt.layerY > rect.y) {
+                let audioE = document.createElement("audio");
+                audioE.setAttribute("src", "./image/audio1.mp3");
+                audioE.load();
+                audioE.play();
+                canvas.removeEventListener("click", onStart)
+            }
+        };
+
+        canvas.addEventListener('click', onStart);
+        ctx.drawImage(imgBackgroud, 0, 0, 500, 630);
+        ctx.beginPath();
+        ctx.rect(rect.x, rect.y, rect.width, rect.height);
+    }
+
 </script>
 </body>
 </html>
