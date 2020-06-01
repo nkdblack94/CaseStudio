@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CaseStudio</title>
+</head>
+<body>
+<div align="center">
+    <canvas id="myCanvas" width="500" height="630" style="border: 1px solid coral"></canvas>
+</div>
+
+<script>
+    let BackgroundRoad = function (x, y, width, height) {
+        this.image = new Image();
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.status = 'down';
+        this.setY = function (y) {
+            this.y += y
+        };
+        this.loadImgRoad = function (arr, image) {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].y >= 630) {
+                    arr.splice(i, 1);
+                    arr.push({...image, y: -630})
+                }
+                if (arr[i].status === 'down') {
+                    arr[i].setY(+3);
+                    ctx.drawImage(arr[i].image, arr[i].x, arr[i].y, arr[i].width, arr[i].height);
+                }
+            }
+        }
+    };
+
+    let BackgroundCoin = function (x, y, width, height) {
+        this.image = new Image();
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.status = 'down';
+        this.setY = function (y) {
+            this.y += y
+        };
+
+        this.setStyle = function (style) {
+            this.image = style.image;
+            this.x = style.x;
+            this.y = style.y;
+            this.width = style.width;
+            this.height = style.height;
+
+        };
+
+        this.loadImgBgCoin = function (arr, image) {
+            let length = arr.length;
+            for (let i = 0; i < length; i++) {
+                if (arr[i].y >= 630) {
+                    arr.splice(i, 1);
+                    length--;
+                }
+                if (arr[i].status === 'down') {
+                    arr[i].setY(+4);
+                    ctx.drawImage(arr[i].image, arr[i].x, arr[i].y, arr[i].width, arr[i].height);
+                }
+            }
+            if(arr[length - 1].y >= 250){
+                let n = Math.trunc(Math.random() * 360);
+                image.setStyle(setStyleCoin(n));
+                arr.push({...image})
+            }
+        };
+
+        this.collision = function (arr, image) {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].x < image.x + image.width &&
+                    arr[i].x + arr[i].width > image.x &&
+                    arr[i].y < image.y + image.height &&
+                    arr[i].y + arr[i].height > image.y) {
+                    arr.splice(i, 1);
+                }
+            }
+        }
+    };
+
+    let BackgroundCar = function (x, y, width, height) {
+        this.image = new Image();
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.status = 'down';
+        this.setY = function (y) {
+            this.y += y
+        };
+
+        this.setStyle = function (style) {
+            this.image = style.image;
+            this.x = style.x;
+            this.y = style.y;
+            this.width = style.width;
+            this.height = style.height;
+
+        };
+
+        this.loadImgBgCar = function (arr, image) {
+            let length = arr.length;
+            for (let i = 0; i < length; i++) {
+                if (arr[i].y >= 630) {
+                    arr.splice(i, 1);
+                    length--;
+                }
+                if (arr[i].status === 'down') {
+                    arr[i].setY(+4 + (speed));
+                    ctx.drawImage(arr[i].image, arr[i].x, arr[i].y, arr[i].width, arr[i].height);
+                }
+            }
+            if (arr[length - 1].y >= 150) {
+                number++;
+                let n = Math.floor(Math.random() * 455);
+                image.setStyle(setStyleCar(number, n));
+                arr.push({...image});
+                if (number === 6) {
+                    number = 0;
+                }
+            }
+        };
+        this.collision = function (arr, image, timer) {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].x < image.x + image.width &&
+                    arr[i].x + arr[i].width > image.x &&
+                    arr[i].y < image.y + image.height &&
+                    arr[i].y + arr[i].height > image.y) {
+                    clearTimeout(timer);
+                }
+            }
+        }
+    };
+
+    let Car = function (x, y, width, height) {
+        this.image = new Image();
+        this.image.src = './image/car6.png';
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.status = 'left';
+
+        this.turnLeft = function (x) {
+            this.x -= x;
+            if (this.x <= 0) {
+                this.x = 0;
+            }
+        };
+
+        this.turnRight = function (x) {
+            this.x += x;
+            if (this.x >= 455) {
+                this.x = 455;
+            }
+        };
+
+        this.loadImgCar = function () {
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        }
+    };
+
+    const BACKGROUND = new BackgroundRoad(0, 0, 500, 630);
+    BACKGROUND.image.src = './image/road3.jpg';
+
+    let arrBackground = [];
+    arrBackground.push({...BACKGROUND, y: 0}, {...BACKGROUND, y: -630});
+
+    const IMG_CAR0 = new Image();
+    IMG_CAR0.src = './image/car.png';
+    const IMG_CAR1 = new Image();
+    IMG_CAR1.src = './image/car1.png';
+    const IMG_CAR2 = new Image();
+    IMG_CAR2.src = './image/car2.png';
+    const IMG_CAR3 = new Image();
+    IMG_CAR3.src = './image/car3.png';
+    const IMG_CAR4 = new Image();
+    IMG_CAR4.src = './image/car4.png';
+    const IMG_CAR5 = new Image();
+    IMG_CAR5.src = './image/car5.png';
+    const IMG_CAR6 = new Image();
+    IMG_CAR6.src = './image/car7.png';
+
+    function setStyleCar(number, x) {
+        switch (number) {
+            case 0:
+                return {
+                    x: x,
+                    y: -50,
+                    width: 45,
+                    height: 100,
+                    image: IMG_CAR0,
+                    status: 'down'
+                };
+            case 1:
+                return {
+                    x: x,
+                    y: -150,
+                    width: 45,
+                    height: 100,
+                    image: IMG_CAR1,
+                    status: 'down'
+                };
+            case 2:
+                return {
+                    x: x,
+                    y: -250,
+                    width: 45,
+                    height: 100,
+                    image: IMG_CAR2,
+                    status: 'down'
+                };
+            case 3:
+                return {
+                    x: x,
+                    y: -350,
+                    width: 45,
+                    height: 100,
+                    image: IMG_CAR3,
+                    status: 'down'
+                };
+            case 4:
+                return {
+                    x: x,
+                    y: -450,
+                    width: 45,
+                    height: 100,
+                    image: IMG_CAR4,
+                    status: 'down'
+                };
+            case 5:
+                return {
+                    x: x,
+                    y: -550,
+                    width: 45,
+                    height: 100,
+                    image: IMG_CAR5,
+                    status: 'down'
+                };
+            case 6:
+                return {
+                    x: x,
+                    y: -550,
+                    width: 45,
+                    height: 80,
+                    image: IMG_CAR6,
+                    status: 'down'
+                };
+        }
+    }
+
+    let number = 0;
+    let speed = 1;
+    const CAR = new BackgroundCar(50, -150, 45, 100, 'down');
+    const ARRCAR = [];
+    CAR.setStyle(setStyleCar(number));
+    ARRCAR.push({...CAR});
+
+    const COIN = new Image();
+    COIN.src = './image/xu.png';
+
+    let setStyleCoin = function(x){
+       return {
+           x: x,
+           y: -150,
+           width: 30,
+           height: 30,
+           image: COIN,
+           status: 'down'
+       }
+    };
+
+    const IMG_COI = new BackgroundCoin(50, -150, 30, 30);
+    const ARRCOIN = [];
+    IMG_COI.setStyle(setStyleCoin(50));
+    ARRCOIN.push({...IMG_COI, x: 50, y: -100}, {...IMG_COI, x: 250, y: -350}, {...IMG_COI, x: 460, y: -550});
+
+    const IMG_CAR = new Car(225, 520, 45, 100);
+
+    let canvas = document.getElementById('myCanvas');
+    let ctx = canvas.getContext('2d');
+
+    let LoadImage = function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        BACKGROUND.loadImgRoad(arrBackground, BACKGROUND);
+        IMG_COI.loadImgBgCoin(ARRCOIN, IMG_COI);
+        CAR.loadImgBgCar(ARRCAR, CAR);
+        IMG_CAR.loadImgCar();
+
+        speed += 0.0001;
+        let timer = setTimeout(LoadImage, 10);
+        CAR.collision(ARRCAR, IMG_CAR, timer);
+        IMG_COI.collision(ARRCOIN, IMG_CAR)
+    };
+
+    document.addEventListener('keydown', function (evt) {
+        if (evt.keyCode === 37) {
+            IMG_CAR.turnLeft(18)
+        }
+        if (evt.keyCode === 39) {
+            IMG_CAR.turnRight(18)
+        }
+    });
+
+    LoadImage();
+</script>
+</body>
+</html>
