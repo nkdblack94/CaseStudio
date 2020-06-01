@@ -66,7 +66,7 @@
                     ctx.drawImage(arr[i].image, arr[i].x, arr[i].y, arr[i].width, arr[i].height);
                 }
             }
-            if(arr[length - 1].y >= 250){
+            if (arr[length - 1].y >= 250) {
                 let n = Math.trunc(Math.random() * 360);
                 image.setStyle(setStyleCoin(n));
                 arr.push({...image})
@@ -297,15 +297,15 @@
     const COIN = new Image();
     COIN.src = './image/xu.png';
 
-    let setStyleCoin = function(x){
-       return {
-           x: x,
-           y: -150,
-           width: 30,
-           height: 30,
-           image: COIN,
-           status: 'down'
-       }
+    let setStyleCoin = function (x) {
+        return {
+            x: x,
+            y: -150,
+            width: 30,
+            height: 30,
+            image: COIN,
+            status: 'down'
+        }
     };
 
     const IMG_COI = new BackgroundCoin(50, -150, 30, 30);
