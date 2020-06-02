@@ -365,7 +365,7 @@
         let onStart = (evt) => {
             if (evt.layerX > rect.x && evt.layerX < rect.x + rect.width && evt.layerY < rect.y + rect.height && evt.layerY > rect.y) {
                 let audioE = document.createElement("audio");
-                audioE.setAttribute("src", "./image/music.mp3");
+                audioE.setAttribute("src", "./image/music1.mp3");
                 audioE.load();
                 audioE.play();
                 canvas.removeEventListener("click", onStart)
