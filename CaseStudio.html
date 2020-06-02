@@ -142,7 +142,11 @@
                     arr[i].y + arr[i].height > image.y) {
                     clearTimeout(timer);
                     image.reset(255, 520);
-                    arr[i].reset(this.x, this.y);
+                    for (let i = 0; i < arr.length; i++){
+                        arr[i].reset(this.x, this.y)
+                    }
+                    point = 0;
+                    speed = 1;
                     loadStartScreen();
                     ctx.fillText("Game Over", 130, 220);
                 }
@@ -315,8 +319,17 @@
 
     let IMG_CAR = new Car(225, 520, 50, 90);
 
+    let car1 = new Car(280, 320, 45, 100);
+    car1.image.src = './image/carx.png';
+    let car2 = new Car(180, 320, 45, 100);
+    car2.image.src = './image/cary.png';
+
+
     let canvas = document.getElementById('myCanvas');
     let ctx = canvas.getContext('2d');
+
+    let xOffset = canvas.offsetLeft;
+    let yOffset = canvas.offsetTop;
 
     let LoadImage = function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -348,13 +361,6 @@
             IMG_CAR.turnRight(30)
         }
     });
-
-    let car1 = new Car(280, 320, 45, 100);
-    car1.image.src = './image/carx.png';
-    let car2 = new Car(180, 320, 45, 100);
-    car2.image.src = './image/cary.png';
-    let xOffset = canvas.offsetLeft;
-    let yOffset = canvas.offsetTop;
 
     loadStartScreen();
     StartAudio();
